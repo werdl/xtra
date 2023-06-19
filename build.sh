@@ -6,3 +6,5 @@ fi
 for file in $fnames; do
 cat src/$file >> xtra.h
 done
+gcc -Wall -Werror -pedantic xtra.h && echo "No Errors Found"
+rm -rf xtra.h.gch
