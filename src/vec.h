@@ -1,3 +1,6 @@
+
+
+
 #ifndef _VEC_H
 #define _VEC_H
 #define VEC_H
@@ -32,9 +35,9 @@ XtraVector * NewXtraVector(int maxsize) {
 }
 XtraVectorReturn XtraVectorPush(XtraVector ** vec, void * data) {
     if ((*vec)->length+1 > (*vec)->max) {
-        XtraVector * newvec=realloc((*vec),sizeof(XtraVector)+sizeof(void *)*(*vec)->max*2);
+        XtraVector * TempVec=realloc((*vec),sizeof(XtraVector)+sizeof(void *)*(*vec)->max*2);
         if (!vec) return VEC_FAILURE;
-        (*vec)=newvec;
+        (*vec)=TempVec;
         (*vec)->max*=2;
     }
     (*vec)->data[(*vec)->length]=data;
@@ -54,5 +57,13 @@ void XtraVectorDelete(XtraVector ** vec) {
         (void)XtraVectorPop(vec);
     }
     free(vec);
+}
+XtraVector * XtraVectorDelEl(XtraVector ** vec, int el) {
+    XtraVector * TempVec=NewXtraVector((*vec)->max);
+    for (int i=0;i<(*vec)->length;i++) {
+        if (i==el) continue;
+        XtraVectorPush(&TempVec,XtraVectorIndex(vec,i));
+    }
+    return TempVec;
 }
 #endif

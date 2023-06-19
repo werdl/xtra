@@ -1,4 +1,4 @@
-fnames=$(ls src)
+fnames=$(ls src| sort -r)
 echo "">xtra.h
 if [ "$1" = "true" ]; then
 printf "#define __thenfi__ 1\n\n" >> xtra.h
