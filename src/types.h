@@ -4,7 +4,7 @@
 #ifndef _STDINT_H
 #include "stdint.h"
 #endif
-#define string char *
+typedef char * string;
 
 #define big long long
 #define ubig unsigned long long
