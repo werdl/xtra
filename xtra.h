@@ -1,4 +1,75 @@
 
+#ifndef _STDLIB_H
+#include <stdlib.h>
+#endif
+
+#ifndef _STDIO_H
+#include <stdio.h>
+#endif
+
+#ifndef _STRING_H
+#include <string.h>
+#endif
+
+#define doubfloat(x) (float)x
+#define float(x) _Generic((x),\
+    char *:(float)atof,\
+    default:doubfloat\
+)
+
+#define doubint(x) (int)x
+#define int(x) _Generic((x),\
+    char *:atoi,\
+    default:doubint\
+)
+
+#define doubdoub(x) (double)x
+#define double(x) _Generic((x),\
+    char *:atof,\
+    default:doubdoub\
+)
+char * itof(double input) {
+    char *c; //size of the number
+    sprintf(c, "%g", input);
+    return c;
+}
+
+#define str(x) _Generic(\
+    int:itoa(x),\
+    float:itof((double)x),\
+    double:itof(x),\
+    char *:x,\
+    char:&x,\
+    default:"err"\
+)
+#define and &&
+#define or ||
+#define not !
+#define nor !(a or b)
+#define xor ^
+#define bnot ~
+#define band &
+#define bor |
+#define lshi <<
+#define rshi >>
+
+#define is ==
+#define isnt !=
+
+#define elif else if
+
+#if defined(__thenfi__)
+#define then {
+#define fi } // for the Bash programmer
+#endif
+
+#define mainf int main(char ** argv,char * argc)
+#define ret0 return 0
+#define ret1 return 1
+
+#define reterr return -1
+#define ifthis(func,...) if(func(...))
+#define ifnthis if(!func(...))
 
 #ifndef _STDDEF_H
 #include "stddef.h"

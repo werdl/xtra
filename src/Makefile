@@ -1,3 +1,0 @@
-SRCS:=$(wildcard *.h)
-go:
-	

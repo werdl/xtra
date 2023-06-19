@@ -15,8 +15,8 @@
 #define elif else if
 
 #if defined(__thenfi__)
-    #define then {
-    #define fi } // for the Bash programmer
+#define then {
+#define fi } // for the Bash programmer
 #endif
 
 #define mainf int main(char ** argv,char * argc)
