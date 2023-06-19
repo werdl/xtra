@@ -41,3 +41,12 @@ char * itof(double input) {
     char:&x,\
     default:"err"\
 )
+
+#define bool(x) _Generic(\
+    int:(bool)x,\
+    float:(bool)(int)x,\
+    double:(bool)(int)x,\
+    char *:x-'0',\
+    bool:x,\
+    default:(bool)(int)x\
+)
