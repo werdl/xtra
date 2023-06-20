@@ -42,6 +42,7 @@ XtraVectorReturn XtraVectorPush(XtraVector ** vec, void * data) {
     }
     (*vec)->data[(*vec)->length]=data;
     ++(*vec)->length;
+    return VEC_SUCCESS;
 }
 void * XtraVectorPop(XtraVector ** vec) {
     if ((*vec)->length==0) return NULL;
@@ -62,8 +63,9 @@ XtraVector * XtraVectorDelEl(XtraVector ** vec, int el) {
     XtraVector * TempVec=NewXtraVector((*vec)->max);
     for (int i=0;i<(*vec)->length;i++) {
         if (i==el) continue;
-        XtraVectorPush(&TempVec,XtraVectorIndex(vec,i));
+        (void)XtraVectorPush(&TempVec,XtraVectorIndex(vec,i));
     }
     return TempVec;
 }
+
 #endif
