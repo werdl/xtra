@@ -101,7 +101,7 @@ XtraVector2D * NewXtraVector2D(int max_width, int max_length) {
     }
     return TempVec;
 }
-XtraVectorReturn XtraVector2DAdd(XtraVector2D ** vec, void * data, int row, int column) {
+XtraVectorReturn XtraVector2DPush(XtraVector2D ** vec, void * data, int row) {
     if ((*vec)->CurrLength+1 > (*vec)->MaxLength) {
         XtraVector2D * TempVec=realloc((*vec),sizeof(XtraVector)+sizeof(void *)*(*vec)->MaxLength*2*(*vec)->MaxWidth);
         if (!vec) return VEC_FAILURE;
@@ -114,6 +114,11 @@ XtraVectorReturn XtraVector2DAdd(XtraVector2D ** vec, void * data, int row, int 
         (*vec)=TempVec;
         (*vec)->MaxLength*=2;
     }
+    XtraVector * TempVec=(*vec)->data[row];
+    printf("%p",(*vec)->data[row]);
+    XtraVectorPush(&TempVec, data);
+    (*vec)->data[row]=TempVec;
+    return VEC_SUCCESS;
 }
 XtraVectorReturn XtraVector2DNewRow(XtraVector2D ** vec) {
     if ((*vec)->CurrLength+1 > (*vec)->MaxLength) {
