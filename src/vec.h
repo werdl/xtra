@@ -12,7 +12,9 @@
 #include <stdlib.h>
 #endif
 
-
+#ifndef _STDIO_H
+#include <stdio.h>
+#endif
 typedef enum VectorReturn {
     VEC_SUCCESS,
     VEC_FAILURE
@@ -115,7 +117,6 @@ XtraVectorReturn XtraVector2DPush(XtraVector2D ** vec, void * data, int row) {
         (*vec)->MaxLength*=2;
     }
     XtraVector * TempVec=(*vec)->data[row];
-    printf("%p",(*vec)->data[row]);
     XtraVectorPush(&TempVec, data);
     (*vec)->data[row]=TempVec;
     return VEC_SUCCESS;
@@ -132,11 +133,10 @@ XtraVectorReturn XtraVector2DNewRow(XtraVector2D ** vec) {
     ++(*vec)->CurrLength;
     return VEC_SUCCESS;
 }
-void * XtraVector2DGrab(XtraVector2D ** vec, int row, int column) {
+void * XtraVector2DGrab(XtraVector2D ** vec, int row, int column,XtraVector2D * vecsingle) {
     if ((*vec)->MaxLength==0 || row>=(*vec)->CurrLength) return NULL;
     if ((*vec)->MaxWidth==0 || column>=(*vec)->CurrWidth) return NULL;
-    XtraVector * Temp=(*vec)->data[row];
-    return XtraVectorIndex(&Temp,column);
+    return XtraVectorIndex((XtraVector **)(vecsingle->data[row]),column);
 }
 #endif
 #ifndef _MATRIX
