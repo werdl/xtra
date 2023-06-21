@@ -77,6 +77,62 @@ XtraVector * XtraVectorChangeEl(XtraVector ** vec, int el, void * data) {
     return TempVec;
 }
 
+typedef struct {
+    int CurrWidth;
+    int CurrLength;
+
+    int MaxWidth;
+    int MaxLength;
+    void * data[datalength]; // void ***
+} XtraVector2D;
+
+XtraVector2D * NewXtraVector2D(int max_width, int max_length) {
+    if (!max_width) max_width=defaultmax;
+    if (!max_length) max_length=defaultmax;
+
+    XtraVector2D * TempVec=malloc(sizeof(XtraVector2D)+sizeof(void *)*max_width*max_length);
+    if (TempVec) {
+        TempVec->MaxWidth=max_width;
+        TempVec->MaxLength=max_width;
+
+        TempVec->CurrWidth=0;
+        TempVec->CurrLength=0;
+
+    }
+    return TempVec;
+}
+XtraVectorReturn XtraVector2DAdd(XtraVector2D ** vec, void * data, int row, int column) {
+    if ((*vec)->CurrLength+1 > (*vec)->MaxLength) {
+        XtraVector2D * TempVec=realloc((*vec),sizeof(XtraVector)+sizeof(void *)*(*vec)->MaxLength*2*(*vec)->MaxWidth);
+        if (!vec) return VEC_FAILURE;
+        (*vec)=TempVec;
+        (*vec)->MaxLength*=2;
+    }  
+    if ((*vec)->CurrWidth+1 > (*vec)->MaxWidth) {
+        XtraVector2D * TempVec=realloc((*vec),sizeof(XtraVector)+sizeof(void *)*(*vec)->MaxLength*(*vec)->MaxWidth*2);
+        if (!vec) return VEC_FAILURE;
+        (*vec)=TempVec;
+        (*vec)->MaxLength*=2;
+    }
+}
+XtraVectorReturn XtraVector2DNewRow(XtraVector2D ** vec) {
+    if ((*vec)->CurrLength+1 > (*vec)->MaxLength) {
+        XtraVector2D * TempVec=realloc((*vec),sizeof(XtraVector)+sizeof(void *)*(*vec)->MaxLength*2*(*vec)->MaxWidth);
+        if (!vec) return (VEC_FAILURE);
+        (*vec)=TempVec;
+        (*vec)->MaxLength*=2;
+    }  
+    XtraVector * row=NewXtraVector((*vec)->MaxWidth);
+    (*vec)->data[(*vec)->CurrLength]=row;
+    ++(*vec)->CurrLength;
+    return VEC_SUCCESS;
+}
+void * XtraVector2DGrab(XtraVector2D ** vec, int row, int column) {
+    if ((*vec)->MaxLength==0 || row>=(*vec)->CurrLength) return NULL;
+    if ((*vec)->MaxWidth==0 || column>=(*vec)->CurrWidth) return NULL;
+    XtraVector * Temp=(*vec)->data[row];
+    return XtraVectorIndex(&Temp,column);
+}
 #endif
 #ifndef _MATRIX
 #define _MATRIX
