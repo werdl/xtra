@@ -24,5 +24,3 @@
 #define ret1 return 1
 
 #define reterr return -1
-#define ifthis(func,...) if(func(...))
-#define ifnthis if(!func(...))

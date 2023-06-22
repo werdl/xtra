@@ -16,7 +16,7 @@ gcc -w test/main.c -o test/main.out # Doesn't need error, is already checked
 test/main.out
 
 if [ $? = 1 ]; then
-printf "\033[0;31mFailed\033[0m test suite - not running."
+printf "\n\033[0;31mFailed\033[0m test suite - not running."
 rm -rf xtra.h
 else 
 printf "\n\033[0mAll tests \033[0;32mpassed\033[0m - compilation successful"

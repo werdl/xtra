@@ -27,8 +27,8 @@
 
 #define doubdoub(x) (double)x
 #define tdouble(x) _Generic((x),\
-    char *:atof,\
-    default:doubdoub\
+    char *:atof(x),\
+    default:doubdoub(x)\
 )
 char * itof(double input) {
     char *c; //size of the number
@@ -36,20 +36,11 @@ char * itof(double input) {
     return c;
 }
 
-#define tstr(x) _Generic(\
-    int:itoa(x),\
-    float:itof((double)x),\
-    double:itof(x),\
-    char *:x,\
-    char:&x,\
-    default:"err"\
-)
-
-#define tbool(x) _Generic(\
+#define tbool(x) _Generic((x),\
     int:(bool)x,\
     float:(bool)(int)x,\
     double:(bool)(int)x,\
-    char *:x-'0',\
+    char *:(bool)atoi(x),\
     bool:x,\
     default:(bool)(int)x\
 )
