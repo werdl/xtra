@@ -79,6 +79,7 @@ XtraVector * XtraVectorChangeEl(XtraVector ** vec, int el, void * data) {
     return TempVec;
 }
 
+
 typedef struct {
     int CurrWidth;
     int CurrLength;
@@ -133,10 +134,16 @@ XtraVectorReturn XtraVector2DNewRow(XtraVector2D ** vec) {
     ++(*vec)->CurrLength;
     return VEC_SUCCESS;
 }
-void * XtraVector2DGrab(XtraVector2D ** vec, int row, int column,XtraVector2D * vecsingle) {
-    if ((*vec)->MaxLength==0 || row>=(*vec)->CurrLength) return NULL;
-    if ((*vec)->MaxWidth==0 || column>=(*vec)->CurrWidth) return NULL;
-    return XtraVectorIndex((XtraVector **)(vecsingle->data[row]),column);
+// void * XtraVector2DGrab(XtraVector2D ** vec, int row, int column,XtraVector2D * vecsingle) {
+//     if ((*vec)->MaxLength==0 || row>=(*vec)->CurrLength) return NULL;
+//     if ((*vec)->MaxWidth==0 || column>=(*vec)->CurrWidth) return NULL;
+//     return XtraVectorIndex((XtraVector **)(vecsingle->data[row]),column);
+// }
+#define rowcol(vec,row,col)
+
+void * XtraVector2DGrab(XtraVector2D ** vec, int row, int col) {
+    XtraVector2D * SinglePointer=*vec;
+    return XtraVectorIndex((XtraVector **)&((SinglePointer)->data[row]),col);
 }
 #endif
 #ifndef _MATRIX
