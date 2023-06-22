@@ -1,7 +1,7 @@
 #define and &&
 #define or ||
 #define not !
-#define nor !(a or b)
+#define nor(a,b) !(a or b)
 #define xor ^
 #define bnot ~
 #define band &

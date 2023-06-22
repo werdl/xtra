@@ -20,7 +20,7 @@ typedef int8_t int8;
 typedef int16_t int16;
 typedef int32_t int32;
 typedef int64_t int64;
-#define GetType(type) _Generic((type), \
+#define GetType(type) _Generic(type,\
     char: "char", \
     signed char: "signed char", \
     unsigned char: "unsigned char", \
@@ -35,7 +35,6 @@ typedef int64_t int64;
     float: "float", \
     double: "double", \
     long double: "long double", \
-    void: "void", \
     char *: "char *", \
     signed char *: "signed char *", \
     unsigned char *: "unsigned char *", \

@@ -14,19 +14,19 @@
 #endif
 
 #define doubfloat(x) (float)x
-#define float(x) _Generic((x),\
+#define tfloat(x) _Generic((x),\
     char *:(float)atof,\
     default:doubfloat\
 )
 
 #define doubint(x) (int)x
-#define int(x) _Generic((x),\
+#define tint(x) _Generic((x),\
     char *:atoi,\
     default:doubint\
 )
 
 #define doubdoub(x) (double)x
-#define double(x) _Generic((x),\
+#define tdouble(x) _Generic((x),\
     char *:atof,\
     default:doubdoub\
 )
@@ -36,7 +36,7 @@ char * itof(double input) {
     return c;
 }
 
-#define str(x) _Generic(\
+#define tstr(x) _Generic(\
     int:itoa(x),\
     float:itof((double)x),\
     double:itof(x),\
@@ -45,7 +45,7 @@ char * itof(double input) {
     default:"err"\
 )
 
-#define bool(x) _Generic(\
+#define tbool(x) _Generic(\
     int:(bool)x,\
     float:(bool)(int)x,\
     double:(bool)(int)x,\

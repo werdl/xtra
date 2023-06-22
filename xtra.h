@@ -29,7 +29,7 @@ typedef struct {
 
 XtraVector * NewXtraVector(int maxsize) {
     if (!maxsize) maxsize=defaultmax;
-    XtraVector * TempVec=malloc(sizeof(XtraVector)+sizeof(void *)*maxsize);
+    XtraVector * TempVec=(XtraVector *)malloc(sizeof(XtraVector)+sizeof(void *)*maxsize);
     if (TempVec) {
         TempVec->max=maxsize;
         TempVec->length=0;
@@ -38,7 +38,7 @@ XtraVector * NewXtraVector(int maxsize) {
 }
 XtraVectorReturn XtraVectorPush(XtraVector ** vec, void * data) {
     if ((*vec)->length+1 > (*vec)->max) {
-        XtraVector * TempVec=realloc((*vec),sizeof(XtraVector)+sizeof(void *)*(*vec)->max*2);
+        XtraVector * TempVec=(XtraVector *)realloc((*vec),sizeof(XtraVector)+sizeof(void *)*(*vec)->max*2);
         if (!vec) return VEC_FAILURE;
         (*vec)=TempVec;
         (*vec)->max*=2;
@@ -80,7 +80,7 @@ XtraVector * XtraVectorChangeEl(XtraVector ** vec, int el, void * data) {
     return TempVec;
 }
 
-
+#define _VEC_2D
 typedef struct {
     int CurrWidth;
     int CurrLength;
@@ -94,38 +94,37 @@ XtraVector2D * NewXtraVector2D(int max_width, int max_length) {
     if (!max_width) max_width=defaultmax;
     if (!max_length) max_length=defaultmax;
 
-    XtraVector2D * TempVec=malloc(sizeof(XtraVector2D)+sizeof(void *)*max_width*max_length);
+    XtraVector2D * TempVec=(XtraVector2D *)malloc(sizeof(XtraVector2D)+sizeof(void *)*max_width*max_length);
     if (TempVec) {
         TempVec->MaxWidth=max_width;
         TempVec->MaxLength=max_width;
 
         TempVec->CurrWidth=0;
         TempVec->CurrLength=0;
-
-    }
+    } else return NULL;
     return TempVec;
 }
 XtraVectorReturn XtraVector2DPush(XtraVector2D ** vec, void * data, int row) {
     if ((*vec)->CurrLength+1 > (*vec)->MaxLength) {
-        XtraVector2D * TempVec=realloc((*vec),sizeof(XtraVector)+sizeof(void *)*(*vec)->MaxLength*2*(*vec)->MaxWidth);
+        XtraVector2D * TempVec=(XtraVector2D *)realloc((*vec),sizeof(XtraVector)+sizeof(void *)*(*vec)->MaxLength*2*(*vec)->MaxWidth);
         if (!vec) return VEC_FAILURE;
         (*vec)=TempVec;
         (*vec)->MaxLength*=2;
     }  
     if ((*vec)->CurrWidth+1 > (*vec)->MaxWidth) {
-        XtraVector2D * TempVec=realloc((*vec),sizeof(XtraVector)+sizeof(void *)*(*vec)->MaxLength*(*vec)->MaxWidth*2);
+        XtraVector2D * TempVec=(XtraVector2D *)realloc((*vec),sizeof(XtraVector)+sizeof(void *)*(*vec)->MaxLength*(*vec)->MaxWidth*2);
         if (!vec) return VEC_FAILURE;
         (*vec)=TempVec;
         (*vec)->MaxLength*=2;
     }
-    XtraVector * TempVec=(*vec)->data[row];
+    XtraVector * TempVec=(XtraVector *)(*vec)->data[row];
     XtraVectorPush(&TempVec, data);
     (*vec)->data[row]=TempVec;
     return VEC_SUCCESS;
 }
 XtraVectorReturn XtraVector2DNewRow(XtraVector2D ** vec) {
     if ((*vec)->CurrLength+1 > (*vec)->MaxLength) {
-        XtraVector2D * TempVec=realloc((*vec),sizeof(XtraVector)+sizeof(void *)*(*vec)->MaxLength*2*(*vec)->MaxWidth);
+        XtraVector2D * TempVec=(XtraVector2D *)realloc((*vec),sizeof(XtraVector)+sizeof(void *)*(*vec)->MaxLength*2*(*vec)->MaxWidth);
         if (!vec) return (VEC_FAILURE);
         (*vec)=TempVec;
         (*vec)->MaxLength*=2;
@@ -144,6 +143,13 @@ void * XtraVector2DGrab(XtraVector2D ** vec, int row, int col) {
     XtraVector2D * SinglePointer=*vec;
     return XtraVectorIndex((XtraVector **)&((SinglePointer)->data[row]),col);
 }
+XtraVectorReturn XtraVector2DSet(XtraVector2D ** vec, void * data, int row, int col) {
+    XtraVector2D * SinglePointer=*vec;
+    XtraVector * RowData=(XtraVector *)((SinglePointer)->data[row]);
+    RowData=XtraVectorChangeEl(&RowData,col,data);
+    (*vec)->data[row]=RowData;
+    return VEC_SUCCESS;
+}
 #endif
 #ifndef _MATRIX
 #define _MATRIX
@@ -156,7 +162,7 @@ typedef struct {
 XtraMatrix * NewXtraMatrix(int width, int length) {
     if (!width) width=defaultmax;
     if (!length) length=defaultmax;
-    XtraMatrix * TempVec=malloc(sizeof(XtraMatrix)+sizeof(void *)*32*32);
+    XtraMatrix * TempVec=(XtraMatrix *)malloc(sizeof(XtraMatrix)+sizeof(void *)*32*32);
     if (TempVec) {
         TempVec->rows=width;
         TempVec->columns=length;
@@ -199,7 +205,7 @@ typedef int8_t int8;
 typedef int16_t int16;
 typedef int32_t int32;
 typedef int64_t int64;
-#define GetType(type) _Generic((type), \
+#define GetType(type) _Generic(type,\
     char: "char", \
     signed char: "signed char", \
     unsigned char: "unsigned char", \
@@ -214,7 +220,6 @@ typedef int64_t int64;
     float: "float", \
     double: "double", \
     long double: "long double", \
-    void: "void", \
     char *: "char *", \
     signed char *: "signed char *", \
     unsigned char *: "unsigned char *", \
@@ -235,7 +240,7 @@ typedef int64_t int64;
 #define and &&
 #define or ||
 #define not !
-#define nor !(a or b)
+#define nor(a,b) !(a or b)
 #define xor ^
 #define bnot ~
 #define band &
@@ -275,19 +280,19 @@ typedef int64_t int64;
 #endif
 
 #define doubfloat(x) (float)x
-#define float(x) _Generic((x),\
+#define tfloat(x) _Generic((x),\
     char *:(float)atof,\
     default:doubfloat\
 )
 
 #define doubint(x) (int)x
-#define int(x) _Generic((x),\
+#define tint(x) _Generic((x),\
     char *:atoi,\
     default:doubint\
 )
 
 #define doubdoub(x) (double)x
-#define double(x) _Generic((x),\
+#define tdouble(x) _Generic((x),\
     char *:atof,\
     default:doubdoub\
 )
@@ -297,7 +302,7 @@ char * itof(double input) {
     return c;
 }
 
-#define str(x) _Generic(\
+#define tstr(x) _Generic(\
     int:itoa(x),\
     float:itof((double)x),\
     double:itof(x),\
@@ -306,7 +311,7 @@ char * itof(double input) {
     default:"err"\
 )
 
-#define bool(x) _Generic(\
+#define tbool(x) _Generic(\
     int:(bool)x,\
     float:(bool)(int)x,\
     double:(bool)(int)x,\
