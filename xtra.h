@@ -140,8 +140,6 @@ XtraVectorReturn XtraVector2DNewRow(XtraVector2D ** vec) {
 //     if ((*vec)->MaxWidth==0 || column>=(*vec)->CurrWidth) return NULL;
 //     return XtraVectorIndex((XtraVector **)(vecsingle->data[row]),column);
 // }
-#define rowcol(vec,row,col)
-
 void * XtraVector2DGrab(XtraVector2D ** vec, int row, int col) {
     XtraVector2D * SinglePointer=*vec;
     return XtraVectorIndex((XtraVector **)&((SinglePointer)->data[row]),col);
