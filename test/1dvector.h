@@ -14,5 +14,8 @@ int TestVector() {
     test=XtraVectorChangeEl(&test,0,(void *)4);
     res=XtraVectorIndex(&test,0);
     if (res!=(void *)4 and res!=(void *)0x4) fail("Failed Grab, wrong value","TestVector"), failed=true;
+    
+    
+    
     if (!failed) succ("TestVector");
 }
