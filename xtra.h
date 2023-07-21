@@ -16,6 +16,10 @@
 #ifndef _STDIO_H
 #include <stdio.h>
 #endif
+
+#ifndef _STRING_H
+#include <string.h>
+#endif
 typedef enum VectorReturn {
     VEC_SUCCESS,
     VEC_FAILURE
@@ -79,7 +83,23 @@ XtraVector * XtraVectorChangeEl(XtraVector ** vec, int el, void * data) {
     }
     return TempVec;
 }
+XtraVector * XtraVectorBubbleSort(XtraVector ** vec) {
+    XtraVector * oldvec;
+    memcpy(oldvec,(*vec),(*vec)->length);
 
+    for (int i=0;i<oldvec->length;i++) {
+        for (int j=0;j<(oldvec->length-1);j++) {
+            if (XtraVectorIndex(vec,j)>XtraVectorIndex(vec,j+1)) {
+                void * temp=XtraVectorIndex(vec,j);
+                XtraVectorChangeEl(vec,j,XtraVectorIndex(vec,j+1));
+                XtraVectorChangeEl(vec,j+1,temp);
+            }
+        }
+    }
+    return (*vec);
+
+
+}
 #define _VEC_2D
 typedef struct {
     int CurrWidth;
